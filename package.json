@@ -1,0 +1,23 @@
+{
+  "name": "gulp-promise",
+  "version": "0.0.1",
+  "description": "Ensure reliable callbacks of multiple streams within a task.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexsaves/gulp-promise.git"
+  },
+  "keywords": [
+    "gulp",
+    "gulpplugin",
+    "promise"
+  ],
+  "author": "Alexei White <alexei.white@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "through": "^2.3.7"
+  }
+}

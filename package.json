@@ -1,6 +1,6 @@
 {
   "name": "gulp-promise",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Ensure reliable callbacks of multiple streams within a task.",
   "main": "index.js",
   "scripts": {

@@ -1,19 +1,22 @@
 var through = require('through');
 
 /**
+ * Promise constructor
+ * @param callback
+ */
+var promise = function(callback) {
+  if (callback) {
+    this.promisecallback = callback;
+  }
+
+  this.promises = [];
+};
+
+/**
  * Holds the promise interface
  * @type {{promises: Array, promisecallback: Function, makePromises: Function}}
  */
-var promise = {
-  /**
-   * The list of promises being made
-   */
-  promises: [],
-
-  /**
-   * The callback to fire at the end
-   */
-  promisecallback: function() {},
+promise.prototype = {
 
   /**
    * Make a set of promises
@@ -22,15 +25,25 @@ var promise = {
    */
   makePromises: function (promises, callback) {
     this.promises = promises;
-    this.promisecallback = callback;
+    if (callback) {
+      this.promisecallback = callback;
+    }
   },
 
   /**
-   * Deliver a promise
+   * Make an incremental promise
+   * @param promise
+   */
+  makePromise: function(promise) {
+    this.promises.push(promise);
+  },
+
+  /**
+   * Deliver a promise via gulp pipes
    * @param promise
    * @returns {*}
    */
-  deliverPromise: function (promise) {
+  deliverGulpPromise: function (promise) {
     var prom = this.promises,
       cb = this.promisecallback;
 
@@ -44,11 +57,33 @@ var promise = {
         }
       }
       if (prom.length === 0) {
-        cb();
+        process.nextTick(function() {
+          cb();
+        });
       }
 
       this.emit('end');
     });
+  },
+
+  /**
+   * Deliver a single promise
+   * @param promise
+   */
+  deliverPromise: function(promise) {
+    var prom = this.promises,
+      cb = this.promisecallback;
+
+    for (var i = 0; i < prom.length; i++) {
+      if (prom[i] == promise) {
+        prom.splice(i--, 1);
+      }
+    }
+    if (prom.length === 0) {
+      process.nextTick(function() {
+        cb();
+      });
+    }
   }
 };
 
